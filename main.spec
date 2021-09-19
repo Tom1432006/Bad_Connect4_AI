@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['z:\\Projekte\\Apps_und_Programme\\Python\\connect_4/main.py'],
-             pathex=['z:\\Projekte\\Apps_und_Programme\\Python\\connect_4'],
+             pathex=['Z:\\Projekte\\Apps_und_Programme\\Python\\connect_4'],
              binaries=[],
              datas=[],
              hiddenimports=[],

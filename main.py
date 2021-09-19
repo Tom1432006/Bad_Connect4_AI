@@ -5,6 +5,8 @@ import math
 from random import randint
 from time import sleep
 
+######################## Game  #######################
+
 class Game:
     width = 0
     height = 0
@@ -70,6 +72,7 @@ class Game:
         ]
         return False
 
+######################## Player #######################
 
 class Player:
     index = 1
@@ -105,7 +108,6 @@ class Player:
             return False
         
         board[position][row] = self.index
-
 
     def check_win(self, board, game):
         for y in range(len(board)):
@@ -176,9 +178,6 @@ class Player:
                 move_list = self.make_move(game.board, x*block_size)
                 position = move_list[0]
                 row = move_list[1]
-                # game.generate_board(game.board)
-                # pygame.display.flip()
-                # clock.tick(fps)
 
                 #add a bit of randomness
                 m+= randint(0, 20)
@@ -205,25 +204,6 @@ class Player:
                         if player.check_win(board, game) == True:
                             print(x2, player.check_win(board, game))
                             m -= 100
-
-                        # #3 depth
-                        # for x3 in range(len(board[0])):
-                        #     try:
-                        #         move_list3 = self.make_move(game.board, x3*block_size)
-                        #         position3 = move_list3[0]
-                        #         row3 = move_list3[1]
-
-                        #         for y in range(len(board)):
-                        #             layer = ''.join(str(x) for x in board[y])
-                        #             if "02220" in layer:
-                        #                 m += 20
-
-                        #         if self.check_win(board, game) == True:
-                        #             m += 20
-                            
-                        #         board[position3][row3] = 0
-                        #     except Exception as e:
-                        #         print(e)
                     
                         board[position2][row2] = 0
                     except Exception as e:
@@ -238,15 +218,16 @@ class Player:
                 board[position][row] = 0
             except Exception as e:
                 print(e, move_list)
+
         print("bester move", row_p)
         return row_p
 
-
-# setup
+######################## Setup #######################
+# initialize pygame modules
 pygame.init()
 pygame.font.init()
 
-#define all neccesairy variables
+#region define all neccesairy variables
 block_size = 170
 circle_margin = 7
 screen_width  = block_size * 7
@@ -255,8 +236,9 @@ fps = 30
 clock = pygame.time.Clock()
 turn = 1
 game_done = False
+#endregion
 
-# Game Class
+# initialize all neccesairy Classes
 game = Game()
 player1 = Player(index=1)
 player2 = Player(index=2)
@@ -268,14 +250,13 @@ YELLOW = (250, 201, 1)
 RED_LIGHT = (203, 50, 50)
 YELLOW_LIGHT = (250, 225, 100)
 
+# define the pygame screen
 screen = pygame.display.set_mode([screen_width, screen_height])
 
 # give window a name
 pygame.display.set_caption("4 Gewinnt")
-# set window icon
-game_icon = pygame.image.load("roter kreis.ico")
-pygame.display.set_icon(game_icon)
 
+# Game Loop
 if __name__ == "__main__":
     while True:
         if not game_done:
@@ -289,11 +270,11 @@ if __name__ == "__main__":
                 player2.make_move(game.board, pygame.mouse.get_pos()[0], True)
 
             # ai
-            if turn == 1:
-                player1.make_move(game.board, player1.max(game.board, game, player2)*block_size)
-                # print(player2.max(game.board, game, player1))
-                game_done = player1.check_win(game.board, game)
-                turn = 2
+            # if turn == 1:
+            #     player1.make_move(game.board, player1.max(game.board, game, player2)*block_size)
+            #     # print(player2.max(game.board, game, player1))
+            #     game_done = player1.check_win(game.board, game)
+            #     turn = 2
             elif turn == 2:
                 player2.make_move(game.board, player2.max(game.board, game, player1)*block_size)
                 # print(player2.max(game.board, game, player1))
@@ -313,13 +294,13 @@ if __name__ == "__main__":
                     if event.key == pygame.K_q:
                         pygame.quit()
 
-                # elif event.type == pygame.MOUSEBUTTONUP:
-                #     pos = pygame.mouse.get_pos()[0]
-                #     if turn == 1:
-                #         if player1.make_move(game.board, pos) == False:
-                #             continue
-                #         game_done = player1.check_win(game.board, game)
-                #         turn = 2    
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    pos = pygame.mouse.get_pos()[0]
+                    if turn == 1:
+                        if player1.make_move(game.board, pos) == False:
+                            continue
+                        game_done = player1.check_win(game.board, game)
+                        turn = 2    
                     # elif turn == 2:
                     #     if player2.make_move(game.board, pos) == False:
                     #         continue
