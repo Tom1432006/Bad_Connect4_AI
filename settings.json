@@ -1,0 +1,54 @@
+{
+    "color_scheme": "colors1",
+    "colors1":[
+        {
+            "name": "player1",
+            "value": "203, 0, 0",
+            "light_value": "203, 50, 50"
+        },
+        {
+            "name": "player2",
+            "value": "250, 201, 1",
+            "light_value": "250, 225, 100"
+        },
+        {
+            "name": "background",
+            "value": "0, 70, 0",
+            "light_value": "0, 178, 0"
+        }
+    ],
+    "colors2":[
+        {
+            "name": "player1",
+            "value": "166, 61, 64",
+            "light_value": "194, 91, 95"
+        },
+        {
+            "name": "player2",
+            "value": "233, 184, 114",
+            "light_value": "237, 198, 142"
+        },
+        {
+            "name": "background",
+            "value": "144, 169, 89",
+            "light_value": "167, 187, 123"
+        }
+    ],
+    "colors3":[
+        {
+            "name": "player1",
+            "value": "233, 41, 53",
+            "light_value": "230, 85, 94"
+        },
+        {
+            "name": "player2",
+            "value": "55, 114, 255",
+            "light_value": "96, 144, 255"
+        },
+        {
+            "name": "background",
+            "value": "8, 7, 8",
+            "light_value": "61, 53, 61"
+        }
+    ]
+}

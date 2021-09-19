@@ -4,6 +4,7 @@ import pygame
 import math
 from random import randint
 from time import sleep
+import json
 
 ######################## Game  #######################
 
@@ -32,25 +33,25 @@ class Game:
 
                 # if there is a 1
                 if self.board[y_block][x_block] == 1:
-                    # draw red circle
-                    pygame.draw.circle(screen, RED, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
+                    # draw PLAYER1_CLR circle
+                    pygame.draw.circle(screen, PLAYER1_CLR, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
                 # if there is a 2
                 elif self.board[y_block][x_block] == 2:
-                    # draw yellow circle
-                    pygame.draw.circle(screen, YELLOW, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
+                    # draw PLAYER2_CLR circle
+                    pygame.draw.circle(screen, PLAYER2_CLR, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
                 # if there is a 3
                 elif self.board[y_block][x_block] == 3:
-                    # draw red circle
-                    pygame.draw.circle(screen, RED_LIGHT, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
+                    # draw PLAYER1_CLR circle
+                    pygame.draw.circle(screen, PLAYER1_CLR_LIGHT, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
                     self.board[y_block][x_block] = 0 #reset board pos
                 # if there is a 4
                 elif self.board[y_block][x_block] == 4:
-                    # draw yellow circle
-                    pygame.draw.circle(screen, YELLOW_LIGHT, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
+                    # draw PLAYER2_CLR circle
+                    pygame.draw.circle(screen, PLAYER2_CLR_LIGHT, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
                     self.board[y_block][x_block] = 0 #reset board pos
                 else:
-                    # draw BACKGROUND circle
-                    pygame.draw.circle(screen, BACKGROUND, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
+                    # draw BACKGROUND_CIRCLE circle
+                    pygame.draw.circle(screen, BACKGROUND_CIRCLE, (x+block_size/2, y+block_size/2), block_size/2-circle_margin)
 
                 #debug text
                 # text = pygame.font.SysFont('Calibri', 20, True, False)
@@ -59,7 +60,7 @@ class Game:
                 # screen.blit(text_render, (x, y))
 
                 rect = pygame.Rect(x, y, block_size, block_size)
-                pygame.draw.rect(screen, BACKGROUND, rect, 1)
+                pygame.draw.rect(screen, BACKGROUND_CIRCLE, rect, 1)
 
     def reset(self):
         self.board = [
@@ -227,6 +228,17 @@ class Player:
 pygame.init()
 pygame.font.init()
 
+#region load json settings
+with open("./settings.json") as f:
+    settings = json.load(f)
+
+color_scheme = settings["color_scheme"]
+try:
+    colors = settings[color_scheme]
+except Exception as e:
+    exit("This color scheme doesn't exist!")
+#endregion
+
 #region define all neccesairy variables
 block_size = 170
 circle_margin = 7
@@ -236,6 +248,8 @@ fps = 30
 clock = pygame.time.Clock()
 turn = 1
 game_done = False
+# define the pygame screen
+screen = pygame.display.set_mode([screen_width, screen_height])
 #endregion
 
 # initialize all neccesairy Classes
@@ -244,14 +258,35 @@ player1 = Player(index=1)
 player2 = Player(index=2)
 
 # colors
-BACKGROUND = (0, 70, 0)
-RED = (203, 0, 0)
-YELLOW = (250, 201, 1)
-RED_LIGHT = (203, 50, 50)
-YELLOW_LIGHT = (250, 225, 100)
+try:
+    for color in colors:
+        if color["name"] == "player1":
+            PLAYER1_CLR = tuple(map(int, color["value"].split(', ')))
+            PLAYER1_CLR_LIGHT = tuple(map(int, color["light_value"].split(', ')))
+        elif color["name"] == "player2":
+            PLAYER2_CLR = tuple(map(int, color["value"].split(', ')))
+            PLAYER2_CLR_LIGHT = tuple(map(int, color["light_value"].split(', ')))
+        elif color["name"] == "background":
+            BACKGROUND_CIRCLE = tuple(map(int, color["value"].split(', ')))
+            BACKGROUND = tuple(map(int, color["light_value"].split(', ')))
 
-# define the pygame screen
-screen = pygame.display.set_mode([screen_width, screen_height])
+    #try colors
+    pygame.draw.circle(screen, PLAYER1_CLR, (0, 0), 0)
+    pygame.draw.circle(screen, PLAYER1_CLR_LIGHT, (0, 0), 0)
+    pygame.draw.circle(screen, PLAYER2_CLR, (0, 0), 0)
+    pygame.draw.circle(screen, PLAYER2_CLR_LIGHT, (0, 0), 0)
+    pygame.draw.circle(screen, BACKGROUND_CIRCLE, (0, 0), 0)
+    pygame.draw.circle(screen, BACKGROUND, (0, 0), 0)
+except Exception as e:
+    exit("Something is wrong with your color scheme!")
+
+# BACKGROUND = (0, 178, 0)
+# BACKGROUND_CIRCLE = (0, 70, 0)
+# PLAYER1_CLR = (203, 0, 0)
+# PLAYER2_CLR = (250, 201, 1)
+# PLAYER1_CLR_LIGHT = (203, 50, 50)
+# PLAYER2_CLR_LIGHT = (250, 225, 100)
+
 
 # give window a name
 pygame.display.set_caption("4 Gewinnt")
@@ -260,7 +295,7 @@ pygame.display.set_caption("4 Gewinnt")
 if __name__ == "__main__":
     while True:
         if not game_done:
-            screen.fill((0, 178, 0))
+            screen.fill(BACKGROUND)
             game.generate_board(game.board)
 
             #preview move
@@ -270,7 +305,7 @@ if __name__ == "__main__":
                 player2.make_move(game.board, pygame.mouse.get_pos()[0], True)
 
             # ai
-            elif turn == 2:
+            if turn == 2:
                 player2.make_move(game.board, player2.max(game.board, game, player1)*block_size)
                 # print(player2.max(game.board, game, player1))
                 game_done = player2.check_win(game.board, game)
