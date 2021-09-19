@@ -270,11 +270,6 @@ if __name__ == "__main__":
                 player2.make_move(game.board, pygame.mouse.get_pos()[0], True)
 
             # ai
-            # if turn == 1:
-            #     player1.make_move(game.board, player1.max(game.board, game, player2)*block_size)
-            #     # print(player2.max(game.board, game, player1))
-            #     game_done = player1.check_win(game.board, game)
-            #     turn = 2
             elif turn == 2:
                 player2.make_move(game.board, player2.max(game.board, game, player1)*block_size)
                 # print(player2.max(game.board, game, player1))
